@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:win32/win32.dart';
 
+import '../const/locale.dart';
 import '../entity/bot.dart';
 
 void main(List<String> arguments) async {
@@ -13,6 +14,7 @@ void main(List<String> arguments) async {
   if (token == null) {
     throw Exception('Token is empty!');
   }
-  Bot bot = Bot(token: token, chatId: chatId);
+  Bot bot =
+      Bot(token: token, chatId: chatId, locale: chooseLocale(env['TG_LOCALE']));
   await bot.init();
 }

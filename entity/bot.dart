@@ -3,53 +3,41 @@ import 'package:teledart/model.dart' hide File;
 import 'package:teledart/teledart.dart';
 import 'package:teledart/telegram.dart';
 
+import '../const/locale.dart';
 import '../utils/decode_cli_message.dart';
 
-const sayHi =
-    'Вот и познакомились!\nТеперь при перезагрузке буду оповещать тебя!';
-
-const rebootMessage =
-    'Перезагружаюсь.\nВыйду на связь, как всё будет готово, а ты пока немного отдохни.';
-
-const whichHostMessage = 'Какой хост хотите попинговать?';
-
-List<BotCommand> commands = [
-  BotCommand(command: 'start', description: 'Познакомиться'),
-  BotCommand(command: 'reboot', description: 'Перезагрузить меня'),
-  BotCommand(
-      command: 'systeminfo', description: 'Показать информацию о системе'),
-  BotCommand(command: 'uptime', description: 'Показать время работы'),
-  BotCommand(command: 'ping', description: 'Попинговать хост'),
-  BotCommand(command: 'ip', description: 'Узнать ip адрес хоста'),
-];
+const engLang = 'English/Английский';
+const ruLang = 'Русский/Russian';
 
 class Bot {
   final String token;
   final String? chatId;
+  final Map<String, String> locale;
   late final TeleDart teleDart;
 
-  Bot({required this.token, required this.chatId});
+  Bot({required this.token, required this.chatId, required this.locale});
 
   Future<void> init() async {
     final username = (await Telegram(token).getMe()).username;
     teleDart = TeleDart(token, Event(username!));
     teleDart.start();
     if (chatId != null) {
-      await teleDart.sendMessage(chatId, 'Я родился!');
+      await teleDart.sendMessage(chatId, locale['readyMessage']!);
     }
     teleDart
-      ..setMyCommands(commands)
+      ..setMyCommands(getCommands(locale))
       ..onCommand('reboot').listen(reboot)
       ..onCommand('network_reset').listen(networkReset)
       ..onCommand('systeminfo').listen(systemInfo)
       ..onCommand('uptime').listen(uptime)
       ..onCommand('start').listen(start)
       ..onCommand('ip').listen(getIp)
+      ..onCommand('locale').listen(setLocale)
       ..onCommand('ping').listen(ping);
   }
 
   Future<Message> sendLoadingMessage(TeleDartMessage msg) async {
-    return await msg.reply('Думаю...');
+    return await msg.reply(locale['thinkingMessage']!);
   }
 
   Future<Message> answer(String text, Message msg) async {
@@ -62,8 +50,30 @@ class Bot {
       ProcessResult result = await Process.run(
           'setx', ['TG_CHAT_ID', msg.chat.id.toString()],
           runInShell: true);
-      await msg
-          .reply('ChatID: ${msg.chat.id}\n${decodeCLIMessage(result)}\n$sayHi');
+      await msg.reply(
+          'ChatID: ${msg.chat.id}\n${decodeCLIMessage(result)}\n${locale['readyMessage']!}');
+    } catch (e) {
+      await msg.reply(e.toString());
+    }
+  }
+
+  Future<void> setLocale(TeleDartMessage msg) async {
+    final ruButton = KeyboardButton(text: ruLang);
+    final enButton = KeyboardButton(text: engLang);
+    final markup = ReplyKeyboardMarkup(keyboard: [
+      [ruButton, enButton]
+    ]);
+    try {
+      await msg.reply('Выберите язык', replyMarkup: markup);
+      final sub = teleDart.onMessage().listen((_) {});
+      sub.onData((data) async {
+        var langMessage = await sendLoadingMessage(data);
+        await Process.run(
+          'setx',
+          ['TG_LOCALE', data.text == ruLang ? 'ru' : 'en'],
+        );
+        await answer(locale['localeChanged']!, langMessage);
+      });
     } catch (e) {
       await msg.reply(e.toString());
     }
@@ -73,7 +83,7 @@ class Bot {
     try {
       var msg = await sendLoadingMessage(message);
       await Process.run('shutdown', ['/r', '/t', '10']);
-      await answer(rebootMessage, msg);
+      await answer(locale['rebootMessage']!, msg);
     } catch (e) {
       await message.reply(e.toString());
     }
@@ -81,7 +91,7 @@ class Bot {
 
   Future<void> ping(TeleDartMessage message) async {
     try {
-      await message.reply(whichHostMessage);
+      await message.reply(locale['whichHostMessage']!);
       final sub = teleDart.onUrl().listen((_) {});
       sub.onData((data) async {
         var msg = await sendLoadingMessage(data);

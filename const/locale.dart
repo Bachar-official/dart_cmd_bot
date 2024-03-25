@@ -1,3 +1,5 @@
+import 'package:teledart/model.dart';
+
 Map<String, String> localeEn = {
   'knowing': 'Knowing',
   'reboot': 'Reboot me',
@@ -10,6 +12,8 @@ Map<String, String> localeEn = {
   'whichHostMessage': 'Which host do you want to ping?',
   'readyMessage': 'Ready',
   'thinkingMessage': 'Thinking...',
+  'locale': 'Choose a language',
+  'localeChanged': 'Locale changed. Reboot needed.',
 };
 
 Map<String, String> localeRu = {
@@ -25,4 +29,23 @@ Map<String, String> localeRu = {
   'whichHostMessage': 'Какой хост хотите попинговать?',
   'readyMessage': 'Я родился!',
   'thinkingMessage': 'Думаю...',
+  'locale': 'Выбрать язык',
+  'localeChanged': 'Язык изменён. Требуется перезагрузка.',
 };
+
+Map<String, String> chooseLocale(String? locale) {
+  if (locale == null || locale == 'en') {
+    return localeEn;
+  }
+  return localeRu;
+}
+
+List<BotCommand> getCommands(Map<String, String> locale) => [
+      BotCommand(command: 'start', description: locale['knowing']!),
+      BotCommand(command: 'reboot', description: locale['reboot']!),
+      BotCommand(command: 'systeminfo', description: locale['systeminfo']!),
+      BotCommand(command: 'uptime', description: locale['uptime']!),
+      BotCommand(command: 'ping', description: locale['ping']!),
+      BotCommand(command: 'ip', description: locale['ip']!),
+      BotCommand(command: 'locale', description: locale['locale']!),
+    ];
