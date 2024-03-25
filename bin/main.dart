@@ -4,7 +4,9 @@ import 'package:win32/win32.dart';
 import '../entity/bot.dart';
 
 void main(List<String> arguments) async {
-  ShowWindow(GetConsoleWindow(), SW_HIDE);
+  if (Platform.isWindows) {
+    ShowWindow(GetConsoleWindow(), SW_HIDE);
+  }
   Map<String, String> env = Platform.environment;
   String? token = env['BOT_TOKEN'];
   String? chatId = env['TG_CHAT_ID'];
