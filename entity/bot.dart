@@ -5,6 +5,7 @@ import 'package:teledart/telegram.dart';
 
 import '../const/locale.dart';
 import '../utils/decode_cli_message.dart';
+import 'locale.dart';
 
 const engLang = 'English/Английский';
 const ruLang = 'Русский/Russian';
@@ -12,7 +13,7 @@ const ruLang = 'Русский/Russian';
 class Bot {
   final String token;
   final String? chatId;
-  final Map<String, String> locale;
+  final Locale locale;
   late final TeleDart teleDart;
 
   Bot({required this.token, required this.chatId, required this.locale});
@@ -22,7 +23,7 @@ class Bot {
     teleDart = TeleDart(token, Event(username!));
     teleDart.start();
     if (chatId != null) {
-      await teleDart.sendMessage(chatId, locale['readyMessage']!);
+      await teleDart.sendMessage(chatId, locale.readyMessage);
     }
     teleDart
       ..setMyCommands(getCommands(locale))
@@ -37,7 +38,7 @@ class Bot {
   }
 
   Future<Message> sendLoadingMessage(TeleDartMessage msg) async {
-    return await msg.reply(locale['thinkingMessage']!);
+    return await msg.reply(locale.thinkingMessage);
   }
 
   Future<Message> answer(String text, Message msg) async {
@@ -47,20 +48,20 @@ class Bot {
 
   Future<void> start(TeleDartMessage msg) async {
     try {
-      ProcessResult result = await Process.run(
+      ProcessResult result = Platform.isLinux ? await Process.run('export', ['TG_CHAT_ID', 'msg.chat.id.toString()']) : await Process.run(
           'setx', ['TG_CHAT_ID', msg.chat.id.toString()],
           runInShell: true);
       await msg.reply(
-          'ChatID: ${msg.chat.id}\n${decodeCLIMessage(result)}\n${locale['readyMessage']!}');
+          'ChatID: ${msg.chat.id}\n${decodeCLIMessage(result)}\n${locale.readyMessage}');
     } catch (e) {
       await msg.reply(e.toString());
     }
   }
 
   Future<void> setLocale(TeleDartMessage msg) async {
-    final ruButton = KeyboardButton(text: ruLang);
-    final enButton = KeyboardButton(text: engLang);
-    final markup = ReplyKeyboardMarkup(keyboard: [
+    var ruButton = InlineKeyboardButton(text: ruLang);
+    var enButton = InlineKeyboardButton(text: engLang);
+    final markup = InlineKeyboardMarkup(inlineKeyboard: [
       [ruButton, enButton]
     ]);
     try {
@@ -68,11 +69,14 @@ class Bot {
       final sub = teleDart.onMessage().listen((_) {});
       sub.onData((data) async {
         var langMessage = await sendLoadingMessage(data);
+        if (Platform.isLinux) {
+          await Process.run('export', ['TG_LOCALE', data.text == ruLang ? 'ru' : 'en']);
+        }
         await Process.run(
           'setx',
           ['TG_LOCALE', data.text == ruLang ? 'ru' : 'en'],
         );
-        await answer(locale['localeChanged']!, langMessage);
+        await answer(locale.localeChanged, langMessage);
       });
     } catch (e) {
       await msg.reply(e.toString());
@@ -82,8 +86,12 @@ class Bot {
   Future<void> reboot(TeleDartMessage message) async {
     try {
       var msg = await sendLoadingMessage(message);
-      await Process.run('shutdown', ['/r', '/t', '10']);
-      await answer(locale['rebootMessage']!, msg);
+      if (Platform.isWindows) {
+        await Process.run('shutdown', ['/r', '/t', '10']);
+      } else if (Platform.isLinux) {
+        await Process.run('reboot', []);
+      }      
+      await answer(locale.rebootMessage, msg);
     } catch (e) {
       await message.reply(e.toString());
     }
@@ -91,11 +99,12 @@ class Bot {
 
   Future<void> ping(TeleDartMessage message) async {
     try {
-      await message.reply(locale['whichHostMessage']!);
+      await message.reply(locale.whichHostMessage);
       final sub = teleDart.onUrl().listen((_) {});
       sub.onData((data) async {
         var msg = await sendLoadingMessage(data);
-        ProcessResult result =
+        ProcessResult result = Platform.isLinux ?
+            await Process.run('ping', ['-c', '4', data.text ?? 'google.ru']) :
             await Process.run('ping', [data.text ?? 'google.ru']);
         await answer(decodeCLIMessage(result), msg);
         return;
@@ -109,7 +118,7 @@ class Bot {
     try {
       var msg = await sendLoadingMessage(message);
       ProcessResult result =
-          await Process.run('netsh', ['winsock', 'reset'], runInShell: true);
+          Platform.isLinux ? await Process.run('systemctl', ['restart', 'networking.service']) : await Process.run('netsh', ['winsock', 'reset'], runInShell: true);
       await answer(decodeCLIMessage(result), msg);
     } catch (e) {
       await message.reply(e.toString());
@@ -119,7 +128,7 @@ class Bot {
   Future<void> systemInfo(TeleDartMessage message) async {
     try {
       var msg = await sendLoadingMessage(message);
-      ProcessResult result = await Process.run('systeminfo', []);
+      ProcessResult result = Platform.isLinux ? await Process.run('uname', ['-a']) : await Process.run('systeminfo', []);
       await answer(decodeCLIMessage(result), msg);
     } catch (e) {
       await message.reply(e.toString());
@@ -129,7 +138,7 @@ class Bot {
   Future<void> uptime(TeleDartMessage message) async {
     try {
       var msg = await sendLoadingMessage(message);
-      ProcessResult result = await Process.run(
+      ProcessResult result = Platform.isLinux ? await Process.run('uptime', ['-p']) : await Process.run(
         'powershell',
         [
           '–Command',
@@ -146,7 +155,7 @@ class Bot {
     try {
       var msg = await sendLoadingMessage(message);
       ProcessResult result =
-          await Process.run('ipconfig', [], runInShell: true);
+          Platform.isLinux ? await Process.run('ifconfig', []) : await Process.run('ipconfig', [], runInShell: true);
       await answer(decodeCLIMessage(result), msg);
     } catch (e) {
       await message.reply(e.toString());
