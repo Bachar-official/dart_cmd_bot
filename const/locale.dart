@@ -16,5 +16,4 @@ List<BotCommand> getCommands(Locale locale) => [
       BotCommand(command: 'uptime', description: locale.uptime),
       BotCommand(command: 'ping', description: locale.ping),
       BotCommand(command: 'ip', description: locale.ip),
-      BotCommand(command: 'locale', description: locale.locale),
     ];

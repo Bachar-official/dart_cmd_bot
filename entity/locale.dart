@@ -10,8 +10,6 @@ abstract class Locale {
   final String whichHostMessage;
   final String readyMessage;
   final String thinkingMessage;
-  final String locale;
-  final String localeChanged;
 
   const Locale({
     required this.knowing,
@@ -25,8 +23,6 @@ abstract class Locale {
     required this.whichHostMessage,
     required this.readyMessage,
     required this.thinkingMessage,
-    required this.locale,
-    required this.localeChanged,
   });
 }
 
@@ -39,14 +35,12 @@ class EnLocale extends Locale {
           uptime: 'Show uptime',
           ping: 'Ping a host',
           ip: 'Get ip address',
-          sayHi: 'Nice to meet you!\nNow when will I be online, I will notify you!',
+          sayHi: 'Please specify a TG_CHAT_ID environment variable written above and reboot your system.',
           rebootMessage:
-              'Rebboting.\nTake a little break, I\'ll be online soon.',
+              'Rebooting.\nTake a little break, I\'ll be online soon.',
           whichHostMessage: 'Which host do you want to ping?',
           readyMessage: 'Ready',
           thinkingMessage: 'Thinking...',
-          locale: 'Choose a language',
-          localeChanged: 'Locale changed. Reboot needed.',
         );
 }
 
@@ -59,13 +53,11 @@ class RuLocale extends Locale {
           uptime: 'Показать время работы',
           ping: 'Попинговать хост',
           ip: 'Узнать мой ip адрес',
-          sayHi: 'Привет!\nТеперь при перезагрузке буду оповещать тебя!',
+          sayHi: 'Пожалуйста, установите в переменную окружения TG_CHAT_ID число, указанное выше и перезагрузите компьютер.',
           rebootMessage:
               'Перезагружаюсь...\nВайду на связь, как всё будет готово, а ты пока немного отдохни.',
           whichHostMessage: 'Какой хост хотите попинговать?',
           readyMessage: 'Я родился!',
           thinkingMessage: 'Думаю...',
-          locale: 'Выбрать язык',
-          localeChanged: 'Язык изменён. Требуется перезагрузка.',
         );
 }

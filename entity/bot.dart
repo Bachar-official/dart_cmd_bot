@@ -33,7 +33,6 @@ class Bot {
       ..onCommand('uptime').listen(uptime)
       ..onCommand('start').listen(start)
       ..onCommand('ip').listen(getIp)
-      ..onCommand('locale').listen(setLocale)
       ..onCommand('ping').listen(ping);
   }
 
@@ -43,41 +42,13 @@ class Bot {
 
   Future<Message> answer(String text, Message msg) async {
     return await teleDart.editMessageText(text,
-        chatId: chatId, messageId: msg.messageId);
+        chatId: msg.chat.id, messageId: msg.messageId);
   }
 
   Future<void> start(TeleDartMessage msg) async {
     try {
-      ProcessResult result = Platform.isLinux ? await Process.run('export', ['TG_CHAT_ID', 'msg.chat.id.toString()']) : await Process.run(
-          'setx', ['TG_CHAT_ID', msg.chat.id.toString()],
-          runInShell: true);
       await msg.reply(
-          'ChatID: ${msg.chat.id}\n${decodeCLIMessage(result)}\n${locale.readyMessage}');
-    } catch (e) {
-      await msg.reply(e.toString());
-    }
-  }
-
-  Future<void> setLocale(TeleDartMessage msg) async {
-    var ruButton = InlineKeyboardButton(text: ruLang);
-    var enButton = InlineKeyboardButton(text: engLang);
-    final markup = InlineKeyboardMarkup(inlineKeyboard: [
-      [ruButton, enButton]
-    ]);
-    try {
-      await msg.reply('Выберите язык', replyMarkup: markup);
-      final sub = teleDart.onMessage().listen((_) {});
-      sub.onData((data) async {
-        var langMessage = await sendLoadingMessage(data);
-        if (Platform.isLinux) {
-          await Process.run('export', ['TG_LOCALE', data.text == ruLang ? 'ru' : 'en']);
-        }
-        await Process.run(
-          'setx',
-          ['TG_LOCALE', data.text == ruLang ? 'ru' : 'en'],
-        );
-        await answer(locale.localeChanged, langMessage);
-      });
+          'ChatID: ${msg.chat.id}\n${locale.sayHi}');
     } catch (e) {
       await msg.reply(e.toString());
     }
@@ -89,7 +60,7 @@ class Bot {
       if (Platform.isWindows) {
         await Process.run('shutdown', ['/r', '/t', '10']);
       } else if (Platform.isLinux) {
-        await Process.run('reboot', []);
+        await Process.run('reboot', [], runInShell: true);
       }      
       await answer(locale.rebootMessage, msg);
     } catch (e) {
