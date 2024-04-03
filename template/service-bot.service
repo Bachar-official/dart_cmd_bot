@@ -1,0 +1,18 @@
+;; Fill it out and put in /etc/systemd/system/<desired-name>.service
+
+[Unit]
+Description=Telegram service bot
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=<your executable>
+WorkingDirectory=<your working directory>
+Enviromnent=BOT_TOKEN=<your TG token>
+
+[Install]
+WantedBy=multi-user.target
