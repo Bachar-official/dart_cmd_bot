@@ -48,4 +48,22 @@ WantedBy=multi-user.target
 
 ### Windows
 
-Under construction
+- Move compiled `main.exe` at desired directory.
+- Set environment variable `BOT_TOKEN` with your TG token.
+- Open Task Scheduler (`taskschd.msc`).
+- Create a new task.
+
+#### Task parameters
+
+- Start at boot and repeat after 5 minutes;
+- Unlimited number of restart attempts;
+- Don't stop the task.
+
+## Commands
+
+- `/start` Knowing. The bot will write you a chat ID, which you will need to enter into the TG_CHAT_ID environment variable.
+- `/reboot` Reboot your machine. The bot will write you 'Ready' when rebooting is completed.
+- `/systeminfo` Information about your system.
+- `/uptime` Write current machine uptime.
+- `/ping` Ping desired host.
+- `/ip` Write machine IP address.
