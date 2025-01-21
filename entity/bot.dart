@@ -5,6 +5,9 @@ import 'package:teledart/telegram.dart';
 
 import '../const/locale.dart';
 import '../utils/decode_cli_message.dart';
+import 'command/command.dart';
+import 'command_impl/reboot_command.dart';
+import 'command_impl/start_command.dart';
 import 'locale.dart';
 
 const engLang = 'English/Английский';
@@ -15,8 +18,14 @@ class Bot {
   final String? chatId;
   final Locale locale;
   late final TeleDart teleDart;
+  late List<Command> commands;
 
-  Bot({required this.token, required this.chatId, required this.locale});
+  Bot({required this.token, required this.chatId, required this.locale}) {
+    commands = [
+      StartCommand(teleDart),
+      RebootCommand(teleDart),
+    ];
+  }
 
   Future<void> init() async {
     final username = (await Telegram(token).getMe()).username;
@@ -26,14 +35,17 @@ class Bot {
       await teleDart.sendMessage(chatId, locale.readyMessage);
     }
     teleDart
-      ..setMyCommands(getCommands(locale))
-      ..onCommand('reboot').listen(reboot)
-      ..onCommand('network_reset').listen(networkReset)
-      ..onCommand('systeminfo').listen(systemInfo)
-      ..onCommand('uptime').listen(uptime)
-      ..onCommand('start').listen(start)
-      ..onCommand('ip').listen(getIp)
-      ..onCommand('ping').listen(ping);
+      .setMyCommands(commands.map((el) => el.toBotCommand()).toList());
+    for (var command in commands) {
+      teleDart.onCommand(command.command).listen(command.execute);
+    }
+    // ..onCommand('reboot').listen(reboot)
+    // ..onCommand('network_reset').listen(networkReset)
+    // ..onCommand('systeminfo').listen(systemInfo)
+    // ..onCommand('uptime').listen(uptime)
+    // ..onCommand('start').listen(start)
+    // ..onCommand('ip').listen(getIp)
+    // ..onCommand('ping').listen(ping);
   }
 
   Future<Message> sendLoadingMessage(TeleDartMessage msg) async {

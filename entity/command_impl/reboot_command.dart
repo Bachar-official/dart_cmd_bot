@@ -8,20 +8,18 @@ import '../command/command.dart';
 
 class RebootCommand extends Command<void> {
   final TeleDart telegram;
-  final TeleDartMessage telegramMessage;
-  RebootCommand(this.telegram, this.telegramMessage)
+  RebootCommand(this.telegram)
       : super(
-            command: 'reboot',
-            description: 'Rebooting',
-            locale: EnLocale(),
-            cmd: Reboot(),
-            teleDart: telegram,
-            message: telegramMessage);
+          command: 'reboot',
+          description: 'Rebooting',
+          locale: EnLocale(),
+          cmd: Reboot(),
+          teleDart: telegram,
+        );
 
   @override
-  Future<void> execute() async {
-    await TelegramUtils.sendLoadingMessage(
-        msg: telegramMessage, locale: locale);
+  Future<void> execute(TeleDartMessage message) async {
+    await TelegramUtils.sendLoadingMessage(msg: message, locale: locale);
     await cmd?.run('');
   }
 

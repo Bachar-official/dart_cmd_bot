@@ -4,28 +4,24 @@ import 'package:teledart/model.dart' hide File;
 import 'package:teledart/teledart.dart';
 
 import '../../cli_commands/start.dart';
-import '../../utils/decode_cli_message.dart';
-import '../../utils/get_config_file.dart';
+import '../../utils/utils.dart';
 import '../locale.dart';
 import '../command/ask_command.dart';
 import '../command/command.dart';
 
 class StartCommand extends Command<void> with AskCommand {
   final TeleDart telegram;
-  final TeleDartMessage telegramMessage;
-  final Future<ProcessResult> runCommand;
-  StartCommand(this.telegram, this.telegramMessage, this.runCommand)
+  StartCommand(this.telegram)
       : super(
           command: 'start',
           description: 'Knowing',
           locale: EnLocale(),
           teleDart: telegram,
-          message: telegramMessage,
           cmd: Start(),
         );
 
   @override
-  Future<void> execute() async {
+  Future<void> execute(message) async {
     try {
       final configFile = File(getConfigFile());
       if (await configFile.exists()) {
@@ -39,6 +35,7 @@ class StartCommand extends Command<void> with AskCommand {
           ],
         );
         final answer = await askInline(
+            message,
             'Existing config file detected. Do you want to update it?',
             keyboard);
         if (answer == 'update') {

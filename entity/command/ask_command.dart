@@ -7,8 +7,9 @@ import 'command.dart';
 enum SubSource { message, url }
 
 mixin AskCommand on Command {
-  Future<String> ask(String question, SubSource source) async {
-    await super.message.reply(question);
+  Future<String> ask(
+      TeleDartMessage message, String question, SubSource source) async {
+    await message.reply(question);
     final completer = Completer<String>();
     final sub = _getSubscription(source);
     sub.onData((data) => completer.complete(data.text ?? ''));
@@ -17,7 +18,8 @@ mixin AskCommand on Command {
     return result;
   }
 
-  Future<String> askInline(String question, ReplyMarkup markup) async {
+  Future<String> askInline(
+      TeleDartMessage message, String question, ReplyMarkup markup) async {
     await message.reply(question, replyMarkup: markup);
     final completer = Completer<String>();
     final sub = super.teleDart.onCallbackQuery().listen((_) {});

@@ -9,18 +9,16 @@ abstract class Command<T> {
   final String description;
   final Locale locale;
   final TeleDart teleDart;
-  final TeleDartMessage message;
   final CliCommand? cmd;
 
   const Command(
       {required this.command,
       required this.description,
       required this.locale,
-      required this.message,
       required this.teleDart,
       this.cmd});
 
   BotCommand toBotCommand();
 
-  Future<T> execute();
+  Future<T> execute(TeleDartMessage message);
 }
