@@ -4,7 +4,7 @@ import 'package:teledart/teledart.dart';
 import '../locale.dart';
 import 'cli_command.dart';
 
-abstract class Command<T> {
+abstract class Command {
   final String command;
   final String description;
   final Locale locale;
@@ -20,5 +20,5 @@ abstract class Command<T> {
 
   BotCommand toBotCommand();
 
-  Future<T> execute(TeleDartMessage message);
+  Future<void> execute(TeleDartMessage message);
 }

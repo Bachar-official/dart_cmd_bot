@@ -10,6 +10,10 @@ abstract class Locale {
   final String whichHostMessage;
   final String readyMessage;
   final String thinkingMessage;
+  final String configExisting;
+  final String update;
+  final String notUpdate;
+  final String willNotify;
 
   const Locale({
     required this.knowing,
@@ -23,6 +27,10 @@ abstract class Locale {
     required this.whichHostMessage,
     required this.readyMessage,
     required this.thinkingMessage,
+    required this.configExisting,
+    required this.notUpdate,
+    required this.update,
+    required this.willNotify,
   });
 }
 
@@ -41,6 +49,12 @@ class EnLocale extends Locale {
           whichHostMessage: 'Which host do you want to ping?',
           readyMessage: 'Ready',
           thinkingMessage: 'Thinking...',
+          configExisting:
+              'Existing config file detected. Do you want to update it?',
+          update: 'Update',
+          notUpdate: 'Don\'t update',
+          willNotify: 'Nice to meet you!\n'
+              'Now when I reboot, I\'ll let you know when I\'m ready!',
         );
 }
 
@@ -59,5 +73,18 @@ class RuLocale extends Locale {
           whichHostMessage: 'Какой хост хотите попинговать?',
           readyMessage: 'Я родился!',
           thinkingMessage: 'Думаю...',
+          configExisting:
+              'Найден существующий файл конфигурации. Хотите ли его обновить?',
+          update: 'Обновить',
+          notUpdate: 'Не обновлять',
+          willNotify: 'Приятно познакомиться!\n'
+              'Теперь при перезагрузке буду уведомлять вас!',
         );
+}
+
+Locale chooseLocale(String? locale) {
+  if (locale == null || locale == 'en') {
+    return EnLocale();
+  }
+  return RuLocale();
 }

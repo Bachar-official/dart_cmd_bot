@@ -6,7 +6,7 @@ import '../../utils/telegram_utils.dart';
 import '../locale.dart';
 import '../command/command.dart';
 
-class RebootCommand extends Command<void> {
+class RebootCommand extends Command {
   final TeleDart telegram;
   RebootCommand(this.telegram)
       : super(
