@@ -3,16 +3,17 @@ import 'package:teledart/teledart.dart';
 
 import '../../cli_commands/reboot.dart';
 import '../../utils/telegram_utils.dart';
-import '../locale.dart';
+import '../config.dart';
 import '../command/command.dart';
 
 class RebootCommand extends Command {
   final TeleDart telegram;
-  RebootCommand(this.telegram)
+  final Config config;
+  RebootCommand(this.telegram, this.config)
       : super(
           command: 'reboot',
           description: 'Rebooting',
-          locale: EnLocale(),
+          locale: config.locale,
           cmd: Reboot(),
           teleDart: telegram,
         );

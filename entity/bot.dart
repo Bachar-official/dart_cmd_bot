@@ -1,13 +1,9 @@
-import 'dart:io';
-import 'package:teledart/model.dart' hide File;
 import 'package:teledart/teledart.dart';
 import 'package:teledart/telegram.dart';
 
-import '../utils/decode_cli_message.dart';
 import 'command/command.dart';
 import 'command_impl/reboot_command.dart';
 import 'command_impl/start_command.dart';
-import 'config.dart';
 import 'settings_service.dart';
 
 const engLang = 'English/Английский';
@@ -22,7 +18,7 @@ class Bot {
   Bot(this.token, this.service) {
     commands = [
       StartCommand(teleDart, service),
-      RebootCommand(teleDart),
+      RebootCommand(teleDart, service.config),
     ];
   }
 
