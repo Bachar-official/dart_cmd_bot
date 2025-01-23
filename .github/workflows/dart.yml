@@ -2,8 +2,13 @@ name: Dart Build and Release
 
 on:
   push:
+    branches:
+      - main # Launch when pushes on main
     tags:
-      - 'v*' # Only when tag starts with "v"
+      - 'v*' # Launch when new tag is pushed
+  pull_request:
+    branches:
+      - main # Launch when pull requests on main
 
 jobs:
   build:
