@@ -6,7 +6,7 @@ import '../entity/settings_service.dart';
 
 void main(List<String> arguments) async {
   if (Platform.isWindows) {
-    ShowWindow(GetConsoleWindow(), SHOW_WINDOW_CMD.SW_HIDE);
+    ShowWindow(GetConsoleWindow(), 0);
   }
   String? token = Platform.environment['BOT_TOKEN'];
   
