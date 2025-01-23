@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main # Launch when pushes on main
-    tags:
-      - 'v*' # Launch when new tag is pushed
   pull_request:
     branches:
       - main # Launch when pull requests on main
@@ -56,14 +54,24 @@ jobs:
         with:
           path: artifacts
 
+      - name: Determine release name
+        id: determine_release
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == refs/heads/main ]]; then
+            RELEASE_NAME="main-${GITHUB_SHA:0:7}"
+          fi
+          echo "Release name: $RELEASE_NAME"
+          echo "release_name=$RELEASE_NAME" >> $GITHUB_OUTPUT
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Token for release
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: tag_name: ${{ steps.determine_release.outputs.release_name }}
+          release_name: Release ${{ steps.determine_release.outputs.release_name }}
           draft: false
           prerelease: false
 
