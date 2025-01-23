@@ -10,8 +10,17 @@ abstract class Locale {
   final String whichHostMessage;
   final String readyMessage;
   final String thinkingMessage;
+  final String configExisting;
+  final String update;
+  final String notUpdate;
+  final String willNotify;
+  final String chooseLocale;
+  final String localeChanged;
+  final String configUpdated;
+  final String error;
 
   const Locale({
+    required this.chooseLocale,
     required this.knowing,
     required this.reboot,
     required this.systeminfo,
@@ -23,12 +32,25 @@ abstract class Locale {
     required this.whichHostMessage,
     required this.readyMessage,
     required this.thinkingMessage,
+    required this.configExisting,
+    required this.notUpdate,
+    required this.update,
+    required this.willNotify,
+    required this.localeChanged,
+    required this.configUpdated,
+    required this.error,
   });
+
+  Map<String, dynamic> toMap();
 }
 
 class EnLocale extends Locale {
   const EnLocale()
       : super(
+          error: 'Error',
+          configUpdated: 'Config updated.',
+          localeChanged: 'Locale changed.',
+          chooseLocale: 'Choose locale',
           knowing: 'Knowing',
           reboot: 'Reboot me',
           systeminfo: 'Show system info',
@@ -41,23 +63,51 @@ class EnLocale extends Locale {
           whichHostMessage: 'Which host do you want to ping?',
           readyMessage: 'Ready',
           thinkingMessage: 'Thinking...',
+          configExisting:
+              'Existing config file detected. Do you want to update it?',
+          update: 'Update',
+          notUpdate: 'Don\'t update',
+          willNotify: 'Nice to meet you!\n'
+              'Now when I reboot, I\'ll let you know when I\'m ready!',
         );
+
+  @override
+  Map<String, dynamic> toMap() => {'locale': 'en'};
 }
 
 class RuLocale extends Locale {
   const RuLocale()
       : super(
+          error: 'Ошибка',
+          configUpdated: 'Конфигурация обновлена.',
+          localeChanged: 'Язык изменён.',
+          chooseLocale: 'Выбрать язык',
           knowing: 'Познакомиться',
           reboot: 'Перезагрузить меня',
           systeminfo: 'Показать информацию о системе',
           uptime: 'Показать время работы',
           ping: 'Попинговать хост',
-          ip: 'Узнать мой ip адрес',
+          ip: 'Узнать мой IP адрес',
           sayHi: 'Пожалуйста, установите в переменную окружения TG_CHAT_ID число, указанное выше и перезагрузите компьютер.',
           rebootMessage:
               'Перезагружаюсь...\nВайду на связь, как всё будет готово, а ты пока немного отдохни.',
           whichHostMessage: 'Какой хост хотите попинговать?',
           readyMessage: 'Я родился!',
           thinkingMessage: 'Думаю...',
+          configExisting:
+              'Найден существующий файл конфигурации. Хотите ли его обновить?',
+          update: 'Обновить',
+          notUpdate: 'Не обновлять',
+          willNotify: 'Приятно познакомиться!\n'
+              'Теперь при перезагрузке буду уведомлять вас!',
         );
+  @override
+  Map<String, dynamic> toMap() => {'locale': 'ru'};
+}
+
+Locale chooseLocale(Map<String, dynamic> locale) {
+  if (locale['locale'] == null || locale['locale'] == 'en') {
+    return EnLocale();
+  }
+  return RuLocale();
 }

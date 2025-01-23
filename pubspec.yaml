@@ -1,7 +1,7 @@
 name: dart_cmd_bot
-description: A sample command-line application with basic argument parsing.
+description: Telegram bot for remote maintenance of your working computer.
 version: 0.0.1
-# repository: https://github.com/my_org/my_repo
+# repository: https://github.com/Bachar-official/dart_cmd_bot
 
 environment:
   sdk: ^3.2.6
