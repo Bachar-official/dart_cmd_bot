@@ -74,37 +74,6 @@ class Bot {
     }
   }
 
-  // Future<void> reboot(TeleDartMessage message) async {
-  //   try {
-  //     var msg = await sendLoadingMessage(message);
-  //     if (Platform.isWindows) {
-  //       await Process.run('shutdown', ['/r', '/t', '10']);
-  //     } else if (Platform.isLinux) {
-  //       await Process.run('reboot', [], runInShell: true);
-  //     }
-  //     await answer(locale.rebootMessage, msg);
-  //   } catch (e) {
-  //     await message.reply(e.toString());
-  //   }
-  // }
-
-  // Future<void> ping(TeleDartMessage message) async {
-  //   try {
-  //     await message.reply(locale.whichHostMessage);
-  //     final sub = teleDart.onUrl().listen((_) {});
-  //     sub.onData((data) async {
-  //       var msg = await sendLoadingMessage(data);
-  //       ProcessResult result = Platform.isLinux ?
-  //           await Process.run('ping', ['-c', '4', data.text ?? 'google.ru']) :
-  //           await Process.run('ping', [data.text ?? 'google.ru']);
-  //       await answer(decodeCLIMessage(result), msg);
-  //       return;
-  //     });
-  //   } catch (e) {
-  //     await message.reply(e.toString());
-  //   }
-  // }
-
   // Future<void> networkReset(TeleDartMessage message) async {
   //   try {
   //     var msg = await sendLoadingMessage(message);
