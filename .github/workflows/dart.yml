@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-${{ matrix.os }}
-          path: bin/dart_cmd_bot_${{ matrix.os }} # Executable path
+          path: build/${{ matrix.os == 'ubuntu-latest' && 'linux.exe' || 'windows.exe' }} # Executable path
 
   create-release:
     needs: build
@@ -71,8 +71,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: artifacts/build-ubuntu-latest/dart_cmd_bot_linux
-          asset_name: dart_cmd_bot_linux
+          asset_path: artifacts/build-ubuntu-latest/dart_cmd_bot_linux.exe
+          asset_name: dart_cmd_bot_linux.exe
 
       - name: Upload Release Assets (Windows)
         uses: actions/upload-release-asset@v1
