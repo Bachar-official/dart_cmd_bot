@@ -42,6 +42,7 @@ class Bot {
       LocaleCommand(teleDart, service, this),
       PingCommand(teleDart, service.config),
       IpAddressCommand(teleDart, service.config),
+      UptimeCommand(teleDart, service.config),
     ];
   }
 
@@ -90,22 +91,6 @@ class Bot {
   //   try {
   //     var msg = await sendLoadingMessage(message);
   //     ProcessResult result = Platform.isLinux ? await Process.run('uname', ['-a']) : await Process.run('systeminfo', []);
-  //     await answer(decodeCLIMessage(result), msg);
-  //   } catch (e) {
-  //     await message.reply(e.toString());
-  //   }
-  // }
-
-  // Future<void> uptime(TeleDartMessage message) async {
-  //   try {
-  //     var msg = await sendLoadingMessage(message);
-  //     ProcessResult result = Platform.isLinux ? await Process.run('uptime', ['-p']) : await Process.run(
-  //       'powershell',
-  //       [
-  //         '–Command',
-  //         '(get-date) – (gcim Win32_OperatingSystem).LastBootUpTime'
-  //       ],
-  //     );
   //     await answer(decodeCLIMessage(result), msg);
   //   } catch (e) {
   //     await message.reply(e.toString());
