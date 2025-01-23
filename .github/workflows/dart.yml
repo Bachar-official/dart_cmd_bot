@@ -83,6 +83,7 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: artifacts/build-ubuntu-latest/dart_cmd_bot_linux.exe
           asset_name: dart_cmd_bot_linux.exe
+          asset_content_type: application/octet-stream
 
       - name: Upload Release Assets (Windows)
         uses: actions/upload-release-asset@v1
@@ -92,6 +93,7 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: artifacts/build-windows-latest/dart_cmd_bot_windows.exe
           asset_name: dart_cmd_bot_windows.exe
+          asset_content_type: application/octet-stream
 
       - name: Upload Install Scripts
         uses: actions/upload-release-asset@v1
@@ -101,6 +103,7 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: install.sh
           asset_name: install.sh
+          asset_content_type: text/x-shellscript
 
       - name: Upload Install Scripts (Windows)
         uses: actions/upload-release-asset@v1
@@ -110,3 +113,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: install.ps1
           asset_name: install.ps1
+          asset_content_type: text/x-powershell
