@@ -31,16 +31,16 @@ jobs:
       - name: Build executable
         run: |
           if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-            dart compile exe bin/main.dart -o build/dart_cmd_bot_linux
+            dart compile exe bin/main.dart -o bin/dart_cmd_bot_linux.exe
           else
-            dart compile exe bin/main.dart -o build/dart_cmd_bot_windows.exe
+            dart compile exe bin/main.dart -o bin/dart_cmd_bot_windows.exe
           fi
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: build-${{ matrix.os }}
-          path: build/dart_cmd_bot_${{ matrix.os }} # Executable path
+          path: bin/dart_cmd_bot_${{ matrix.os }} # Executable path
 
   create-release:
     needs: build
