@@ -1,6 +1,7 @@
 import 'package:teledart/model.dart' hide File;
 import 'package:teledart/teledart.dart';
 
+import '../../utils/catch_errors.dart';
 import '../command/ask_command.dart';
 import '../command/command.dart';
 import '../settings_service.dart';
@@ -45,7 +46,7 @@ class StartCommand extends Command with AskCommand {
         await message.reply(locale.willNotify);
       }
     } catch (e) {
-      await message.reply(e.toString());
+      await catchError(locale, e, message);
     }
   }
 }

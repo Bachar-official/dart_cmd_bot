@@ -17,6 +17,7 @@ abstract class Locale {
   final String chooseLocale;
   final String localeChanged;
   final String configUpdated;
+  final String error;
 
   const Locale({
     required this.chooseLocale,
@@ -37,6 +38,7 @@ abstract class Locale {
     required this.willNotify,
     required this.localeChanged,
     required this.configUpdated,
+    required this.error,
   });
 
   Map<String, dynamic> toMap();
@@ -45,6 +47,7 @@ abstract class Locale {
 class EnLocale extends Locale {
   const EnLocale()
       : super(
+          error: 'Error',
           configUpdated: 'Config updated.',
           localeChanged: 'Locale changed.',
           chooseLocale: 'Choose locale',
@@ -75,6 +78,7 @@ class EnLocale extends Locale {
 class RuLocale extends Locale {
   const RuLocale()
       : super(
+          error: 'Ошибка',
           configUpdated: 'Конфигурация обновлена.',
           localeChanged: 'Язык изменён.',
           chooseLocale: 'Выбрать язык',
@@ -83,7 +87,7 @@ class RuLocale extends Locale {
           systeminfo: 'Показать информацию о системе',
           uptime: 'Показать время работы',
           ping: 'Попинговать хост',
-          ip: 'Узнать мой ip адрес',
+          ip: 'Узнать мой IP адрес',
           sayHi: 'Пожалуйста, установите в переменную окружения TG_CHAT_ID число, указанное выше и перезагрузите компьютер.',
           rebootMessage:
               'Перезагружаюсь...\nВайду на связь, как всё будет готово, а ты пока немного отдохни.',

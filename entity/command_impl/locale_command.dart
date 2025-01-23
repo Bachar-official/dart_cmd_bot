@@ -1,6 +1,7 @@
 import 'package:teledart/model.dart';
 import 'package:teledart/teledart.dart';
 
+import '../../utils/catch_errors.dart';
 import '../bot.dart';
 import '../command/ask_command.dart';
 import '../command/command.dart';
@@ -35,7 +36,7 @@ class LocaleCommand extends Command with AskCommand {
       final newLocale = answer == 'eng' ? EnLocale() : RuLocale();
       await bot.updateLocale(newLocale);
     } catch (e) {
-      await message.reply(e.toString());
+      await catchError(locale, e, message);
     }
   }
 }

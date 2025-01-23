@@ -6,7 +6,7 @@ abstract class CliCommand {
 
   const CliCommand({required this.linCom, required this.winCom});
 
-  Future<ProcessResult> run(String arg) {
+  Future<ProcessResult> run([String arg = '']) {
     switch (Platform.operatingSystem) {
       case 'windows':
         return winCom(arg);

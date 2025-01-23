@@ -41,6 +41,7 @@ class Bot {
       RebootCommand(teleDart, service.config),
       LocaleCommand(teleDart, service, this),
       PingCommand(teleDart, service.config),
+      IpAddressCommand(teleDart, service.config),
     ];
   }
 
@@ -105,17 +106,6 @@ class Bot {
   //         '(get-date) – (gcim Win32_OperatingSystem).LastBootUpTime'
   //       ],
   //     );
-  //     await answer(decodeCLIMessage(result), msg);
-  //   } catch (e) {
-  //     await message.reply(e.toString());
-  //   }
-  // }
-
-  // Future<void> getIp(TeleDartMessage message) async {
-  //   try {
-  //     var msg = await sendLoadingMessage(message);
-  //     ProcessResult result =
-  //         Platform.isLinux ? await Process.run('ifconfig', []) : await Process.run('ipconfig', [], runInShell: true);
   //     await answer(decodeCLIMessage(result), msg);
   //   } catch (e) {
   //     await message.reply(e.toString());
