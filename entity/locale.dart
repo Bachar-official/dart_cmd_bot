@@ -14,8 +14,12 @@ abstract class Locale {
   final String update;
   final String notUpdate;
   final String willNotify;
+  final String chooseLocale;
+  final String localeChanged;
+  final String configUpdated;
 
   const Locale({
+    required this.chooseLocale,
     required this.knowing,
     required this.reboot,
     required this.systeminfo,
@@ -31,12 +35,19 @@ abstract class Locale {
     required this.notUpdate,
     required this.update,
     required this.willNotify,
+    required this.localeChanged,
+    required this.configUpdated,
   });
+
+  Map<String, dynamic> toMap();
 }
 
 class EnLocale extends Locale {
   const EnLocale()
       : super(
+          configUpdated: 'Config updated.',
+          localeChanged: 'Locale changed.',
+          chooseLocale: 'Choose locale',
           knowing: 'Knowing',
           reboot: 'Reboot me',
           systeminfo: 'Show system info',
@@ -56,11 +67,17 @@ class EnLocale extends Locale {
           willNotify: 'Nice to meet you!\n'
               'Now when I reboot, I\'ll let you know when I\'m ready!',
         );
+
+  @override
+  Map<String, dynamic> toMap() => {'locale': 'en'};
 }
 
 class RuLocale extends Locale {
   const RuLocale()
       : super(
+          configUpdated: 'Конфигурация обновлена.',
+          localeChanged: 'Язык изменён.',
+          chooseLocale: 'Выбрать язык',
           knowing: 'Познакомиться',
           reboot: 'Перезагрузить меня',
           systeminfo: 'Показать информацию о системе',
@@ -80,10 +97,12 @@ class RuLocale extends Locale {
           willNotify: 'Приятно познакомиться!\n'
               'Теперь при перезагрузке буду уведомлять вас!',
         );
+  @override
+  Map<String, dynamic> toMap() => {'locale': 'ru'};
 }
 
-Locale chooseLocale(String? locale) {
-  if (locale == null || locale == 'en') {
+Locale chooseLocale(Map<String, dynamic> locale) {
+  if (locale['locale'] == null || locale['locale'] == 'en') {
     return EnLocale();
   }
   return RuLocale();

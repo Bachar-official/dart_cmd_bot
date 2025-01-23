@@ -18,7 +18,8 @@ abstract class Command {
       required this.teleDart,
       this.cmd});
 
-  BotCommand toBotCommand();
+  BotCommand toBotCommand() =>
+      BotCommand(command: command, description: description);
 
   Future<void> execute(TeleDartMessage message);
 }

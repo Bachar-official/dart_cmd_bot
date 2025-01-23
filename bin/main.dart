@@ -8,7 +8,9 @@ void main(List<String> arguments) async {
   if (Platform.isWindows) {
     ShowWindow(GetConsoleWindow(), SHOW_WINDOW_CMD.SW_HIDE);
   }
-  String? token = Platform.environment['BOT_TOKEN'];
+  // String? token = Platform.environment['BOT_TOKEN'];
+  String? token = '1847335048:AAGfMb8lZh7y3R_h52qD4DJTkEmqke0kHmY';
+
   if (token == null) {
     throw Exception('Token is empty!');
   }
@@ -16,5 +18,5 @@ void main(List<String> arguments) async {
   
   Bot bot =
       Bot(token, service);
-  await bot.init();
+  bot.init();
 }

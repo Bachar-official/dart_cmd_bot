@@ -27,5 +27,5 @@ class Config {
         locale: locale ?? this.locale,
       );
 
-  String toJson() => jsonEncode({'chatId': chatId, 'locale': locale});
+  String toJson() => jsonEncode({'chatId': chatId, 'locale': locale.toMap()});
 }

@@ -1,7 +1,6 @@
 import 'package:teledart/model.dart' hide File;
 import 'package:teledart/teledart.dart';
 
-import '../../cli_commands/start.dart';
 import '../command/ask_command.dart';
 import '../command/command.dart';
 import '../settings_service.dart';
@@ -12,10 +11,10 @@ class StartCommand extends Command with AskCommand {
   StartCommand(this.telegram, this.service)
       : super(
           command: 'start',
-          description: 'Knowing',
+          description: service.config.locale.knowing,
           locale: service.config.locale,
           teleDart: telegram,
-          cmd: Start(),
+          cmd: null,
         );
 
   @override
@@ -49,8 +48,4 @@ class StartCommand extends Command with AskCommand {
       await message.reply(e.toString());
     }
   }
-
-  @override
-  BotCommand toBotCommand() =>
-      BotCommand(command: command, description: description);
 }

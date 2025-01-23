@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:teledart/teledart.dart';
 import 'package:teledart/telegram.dart';
 
 import 'command/command.dart';
-import 'command_impl/reboot_command.dart';
-import 'command_impl/start_command.dart';
+import 'command_impl/command_impl.dart';
+import 'locale.dart';
 import 'settings_service.dart';
 
 const engLang = 'English/Английский';
@@ -14,52 +16,63 @@ class Bot {
   final SettingsService service;
   late final TeleDart teleDart;
   late List<Command> commands;
+  final Map<String, StreamSubscription> _subscriptions = {};
 
-  Bot(this.token, this.service) {
-    commands = [
-      StartCommand(teleDart, service),
-      RebootCommand(teleDart, service.config),
-    ];
-  }
+  Bot(this.token, this.service);
 
-  Future<void> init() async {
+  void init() async {
     final username = (await Telegram(token).getMe()).username;
     teleDart = TeleDart(token, Event(username!));
     teleDart.start();
+
+    _initializeCommands();
+
     if (service.config.chatId != null) {
       await teleDart.sendMessage(
           service.config.chatId, service.config.locale.readyMessage);
     }
-    teleDart.setMyCommands(commands.map((el) => el.toBotCommand()).toList());
-    for (var command in commands) {
-      teleDart.onCommand(command.command).listen(command.execute);
-    }
-    // ..onCommand('reboot').listen(reboot)
-    // ..onCommand('network_reset').listen(networkReset)
-    // ..onCommand('systeminfo').listen(systemInfo)
-    // ..onCommand('uptime').listen(uptime)
-    // ..onCommand('start').listen(start)
-    // ..onCommand('ip').listen(getIp)
-    // ..onCommand('ping').listen(ping);
+
+    _updateCommands();
   }
 
-  // Future<Message> sendLoadingMessage(TeleDartMessage msg) async {
-  //   return await msg.reply(locale.thinkingMessage);
-  // }
+  void _initializeCommands() {
+    commands = [
+      StartCommand(teleDart, service),
+      RebootCommand(teleDart, service.config),
+      LocaleCommand(teleDart, service, this),
+      PingCommand(teleDart, service.config),
+    ];
+  }
 
-  // Future<Message> answer(String text, Message msg) async {
-  //   return await teleDart.editMessageText(text,
-  //       chatId: msg.chat.id, messageId: msg.messageId);
-  // }
+  void _clearSubscriptions() {
+    for (var subscription in _subscriptions.values) {
+      subscription.cancel();
+    }
+    _subscriptions.clear();
+  }
 
-  // Future<void> start(TeleDartMessage msg) async {
-  //   try {
-  //     await msg.reply(
-  //         'ChatID: ${msg.chat.id}\n${locale.sayHi}');
-  //   } catch (e) {
-  //     await msg.reply(e.toString());
-  //   }
-  // }
+  void _updateCommands() async {
+    _clearSubscriptions();
+    await teleDart.deleteMyCommands();
+    await teleDart
+        .setMyCommands(commands.map((el) => el.toBotCommand()).toList());
+
+    for (var command in commands) {
+      _subscriptions[command.command] =
+          teleDart.onCommand(command.command).listen(command.execute);
+    }
+  }
+
+  Future<void> updateLocale(Locale locale) async {
+    service.setLocale(locale);
+    _initializeCommands();
+    _updateCommands();
+
+    if (service.config.chatId != null) {
+      await teleDart.sendMessage(
+          service.config.chatId, service.config.locale.localeChanged);
+    }
+  }
 
   // Future<void> reboot(TeleDartMessage message) async {
   //   try {

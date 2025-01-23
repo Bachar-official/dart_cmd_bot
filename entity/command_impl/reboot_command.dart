@@ -12,7 +12,7 @@ class RebootCommand extends Command {
   RebootCommand(this.telegram, this.config)
       : super(
           command: 'reboot',
-          description: 'Rebooting',
+          description: config.locale.reboot,
           locale: config.locale,
           cmd: Reboot(),
           teleDart: telegram,
@@ -23,8 +23,4 @@ class RebootCommand extends Command {
     await TelegramUtils.sendLoadingMessage(msg: message, locale: locale);
     await cmd?.run('');
   }
-
-  @override
-  BotCommand toBotCommand() =>
-      BotCommand(command: command, description: description);
 }
