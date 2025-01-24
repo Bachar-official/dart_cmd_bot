@@ -2,32 +2,46 @@
 
 Telegram bot for remote maintenance of a work computer.
 
-## Motivation
+# Motivation
 
 There are situations when your remote work computer won't response via RDP after a connection to another network. So, you could reset network or reboot it, but definitely can't do it.
 This software may solve this problem (I hope 😊).
 
-## Requirements
+# Requirements
 
 - Telegram bot token;
 - Local user account (for Windows).
 
-## Build from sources
+# Build from sources
 
 - Install [Dart SDK](https://dart.dev/get-dart#install)
 - Clone this repository
 - Run `dart pub get` for installing dependencies
 - Run `dart compile exe bin/main.exe` at root project directory.
 
-### Linux
+# Installation
 
-#### systemd-based distros
+## Linux
 
-Just launch `install.sh` script at root of repo directory.
+### systemd-based distros
 
-### Windows
+Just launch `install.sh` script at root repo directory.
 
-Just launch `install.ps1` script at root of repo directory.
+## Windows
+
+Just launch `install.ps1` script at root repo directory.
+
+# Uninstallation
+
+## Linux
+
+### systemd-based- distros
+
+Just launch `uninstall.sh` script at root repo directory.
+
+## Windows
+
+Just launch `uninstall.ps1` script at root repo directory.
 
 ## Commands
 

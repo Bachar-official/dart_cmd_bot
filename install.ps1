@@ -1,7 +1,7 @@
 $BOT_TOKEN = Read-Host "Please enter your Telegram bot token:"
 
 $LATEST_RELEASE_URL = (Invoke-RestMethod -Uri "https://api.github.com/repos/Bachar-official/dart_cmd_bot/releases/latest").assets | Where-Object { $_.name -eq "dart_cmd_bot_windows.exe" } | Select-Object -ExpandProperty browser_download_url
-Invoke-WebRequest -Uri $LATEST_RELEASE_URL -OutFile "dart_cmd_bot_windows.exe"
+Invoke-WebRequest -Uri $LATEST_RELEASE_URL -OutFile "$PWD\dart_cmd_bot_windows.exe"
 
 [System.Environment]::SetEnvironmentVariable("BOT_TOKEN", $BOT_TOKEN, [System.EnvironmentVariableTarget]::Machine)
 
